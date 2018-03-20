@@ -62,4 +62,6 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$rootProject.ext.daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.ext.daggerVersion"
+
+    debugImplementation "com.facebook.stetho:stetho:$rootProject.ext.stethoVersion"
 }

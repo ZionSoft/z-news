@@ -18,11 +18,13 @@ package net.zionsoft.news
 
 import android.app.Application
 import android.os.StrictMode
+import com.facebook.stetho.Stetho
 
 abstract class BaseApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
         StrictMode.enableDefaults()
+        Stetho.initializeWithDefaults(this)
     }
 }
