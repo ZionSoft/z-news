@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
+    <style name="Text"/>
+
+    <style name="Text.Display4">
+        <item name="android:fontFamily">@string/font_family_light</item>
+        <item name="android:textColor">@color/text_dark_primary</item>
+        <item name="android:textSize">@dimen/text_display_4</item>
+    </style>
+
+    <style name="Text.Display4.Light">
+        <item name="android:textColor">@color/text_light_primary</item>
+    </style>
+
+    <style name="Text.Display3">
+        <item name="android:fontFamily">@string/font_family_regular</item>
+        <item name="android:textColor">@color/text_dark_primary</item>
+        <item name="android:textSize">@dimen/text_display_3</item>
+    </style>
+
+    <style name="Text.Display3.Light">
+        <item name="android:textColor">@color/text_light_primary</item>
+    </style>
+
+    <style name="Text.Display2">
+        <item name="android:fontFamily">@string/font_family_regular</item>
+        <item name="android:textColor">@color/text_dark_primary</item>
+        <item name="android:textSize">@dimen/text_display_2</item>
+    </style>
+
+    <style name="Text.Display2.Light">
+        <item name="android:textColor">@color/text_light_primary</item>
+    </style>
+
+    <style name="Text.Display1">
+        <item name="android:fontFamily">@string/font_family_regular</item>
+        <item name="android:textColor">@color/text_dark_primary</item>
+        <item name="android:textSize">@dimen/text_display_1</item>
+    </style>
+
+    <style name="Text.Display1.Light">
+        <item name="android:textColor">@color/text_light_primary</item>
+    </style>
+
+    <style name="Text.Headline">
+        <item name="android:fontFamily">@string/font_family_regular</item>
+        <item name="android:textColor">@color/text_dark_primary</item>
+        <item name="android:textSize">@dimen/text_headline</item>
+    </style>
+
+    <style name="Text.Headline.Light">
+        <item name="android:textColor">@color/text_light_primary</item>
+    </style>
+
+    <style name="Text.Title">
+        <item name="android:fontFamily">@string/font_family_medium</item>
+        <item name="android:textColor">@color/text_dark_primary</item>
+        <item name="android:textSize">@dimen/text_title</item>
+    </style>
+
+    <style name="Text.Title.Light">
+        <item name="android:textColor">@color/text_light_primary</item>
+    </style>
+
+    <style name="Text.Subheading">
+        <item name="android:fontFamily">@string/font_family_regular</item>
+        <item name="android:textColor">@color/text_dark_secondary</item>
+        <item name="android:textSize">@dimen/text_subheading</item>
+    </style>
+
+    <style name="Text.Subheading.Light">
+        <item name="android:textColor">@color/text_light_secondary</item>
+    </style>
+
+    <style name="Text.Body2">
+        <item name="android:fontFamily">@string/font_family_medium</item>
+        <item name="android:textColor">@color/text_dark_primary</item>
+        <item name="android:textSize">@dimen/text_body</item>
+    </style>
+
+    <style name="Text.Body2.Light">
+        <item name="android:textColor">@color/text_light_primary</item>
+    </style>
+
+    <style name="Text.Body1">
+        <item name="android:fontFamily">@string/font_family_regular</item>
+        <item name="android:textColor">@color/text_dark_primary</item>
+        <item name="android:textSize">@dimen/text_body</item>
+    </style>
+
+    <style name="Text.Body1.Light">
+        <item name="android:textColor">@color/text_light_primary</item>
+    </style>
+
+    <style name="Text.Caption">
+        <item name="android:fontFamily">@string/font_family_regular</item>
+        <item name="android:textColor">@color/text_dark_secondary</item>
+        <item name="android:textSize">@dimen/text_caption</item>
+    </style>
+
+    <style name="Text.Caption.Light">
+        <item name="android:textColor">@color/text_light_secondary</item>
+    </style>
+
+    <style name="Text.Button">
+        <item name="android:fontFamily">@string/font_family_medium</item>
+        <item name="android:textColor">@color/text_dark_primary</item>
+        <item name="android:textSize">@dimen/text_button</item>
+    </style>
+
+    <style name="Text.Button.Light">
+        <item name="android:textColor">@color/text_light_primary</item>
+    </style>
+</resources>

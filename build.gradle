@@ -10,6 +10,7 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         mavenCentral()
     }
 }
@@ -33,4 +34,6 @@ ext {
     versionName = '0.1.0'
 
     supportedLocales = ["en"]
+
+    supportLibraryVersion = '27.1.0'
 }
