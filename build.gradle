@@ -1,0 +1,29 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.6'
+}
+
+ext {
+    sourceJavaVersion = JavaVersion.VERSION_1_7
+    targetJavaVersion = JavaVersion.VERSION_1_7
+
+    compileSdkVersion = 27
+    buildToolsVersion = '27.0.3'
+
+    minSdkVersion = 14
+    targetSdkVersion = 27
+
+    versionCode = 100
+    versionName = '0.1.0'
+
+    supportedLocales = ["en"]
+}
