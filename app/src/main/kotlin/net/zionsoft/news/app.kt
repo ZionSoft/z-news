@@ -16,4 +16,30 @@
 
 package net.zionsoft.news
 
-class App : BaseApp()
+import android.app.Activity
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
+import javax.inject.Inject
+
+class App : BaseApp(), HasActivityInjector {
+    private lateinit var appComponent: AppComponent
+
+    fun getAppComponent(): AppComponent {
+        return appComponent
+    }
+
+    @Inject
+    lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
+
+    override fun onCreate() {
+        super.onCreate()
+
+        appComponent = DaggerAppComponent.builder().appModule(AppModule(this)).build()
+        appComponent.inject(this)
+    }
+
+    override fun activityInjector(): AndroidInjector<Activity> {
+        return dispatchingActivityInjector
+    }
+}
