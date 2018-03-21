@@ -16,11 +16,18 @@
 
 package net.zionsoft.news
 
+import android.app.Activity
 import android.content.Context
+import dagger.Binds
 import dagger.Component
 import dagger.Module
 import dagger.Provides
+import dagger.android.ActivityKey
 import dagger.android.AndroidInjectionModule
+import dagger.android.AndroidInjector
+import dagger.multibindings.IntoMap
+import net.zionsoft.news.home.HomeActivity
+import net.zionsoft.news.home.HomeSubcomponent
 import javax.inject.Singleton
 
 @Module
@@ -32,8 +39,13 @@ open class BaseAppModule(private val app: App) {
     }
 }
 
-@Module
-open class ActivityModule
+@Module(subcomponents = [(HomeSubcomponent::class)])
+abstract class ActivityModule {
+    @Binds
+    @IntoMap
+    @ActivityKey(HomeActivity::class)
+    internal abstract fun bindHomeActivityInjectorFactory(builder: HomeSubcomponent.Builder): AndroidInjector.Factory<out Activity>
+}
 
 @Singleton
 @Component(modules = [(AppModule::class), (AndroidInjectionModule::class), (ActivityModule::class)])

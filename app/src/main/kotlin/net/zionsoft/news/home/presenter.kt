@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-package net.zionsoft.news
+package net.zionsoft.news.home
 
-import android.app.Activity
-import android.os.Bundle
-import net.zionsoft.news.home.HomeActivity
+import net.zionsoft.news.base.MVPPresenter
 
-class LauncherActivity : Activity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        startActivity(HomeActivity.newStartIntent(this))
-        finish()
-    }
-}
+class HomePresenter : MVPPresenter<HomeView>()

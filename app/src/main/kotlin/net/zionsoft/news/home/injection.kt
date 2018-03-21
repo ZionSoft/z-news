@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package net.zionsoft.news
+package net.zionsoft.news.home
 
-import android.app.Activity
-import android.os.Bundle
-import net.zionsoft.news.home.HomeActivity
+import dagger.Module
+import dagger.Provides
+import dagger.Subcomponent
+import dagger.android.AndroidInjector
 
-class LauncherActivity : Activity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        startActivity(HomeActivity.newStartIntent(this))
-        finish()
+@Module
+class HomeModule {
+    @Provides
+    fun provideHomePresenter(): HomePresenter {
+        return HomePresenter()
     }
+}
+
+@Subcomponent(modules = [(HomeModule::class)])
+interface HomeSubcomponent : AndroidInjector<HomeActivity> {
+    @Subcomponent.Builder
+    abstract class Builder : AndroidInjector.Builder<HomeActivity>()
 }

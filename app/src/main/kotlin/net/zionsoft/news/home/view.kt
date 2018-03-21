@@ -14,17 +14,38 @@
  * limitations under the License.
  */
 
-package net.zionsoft.news
+package net.zionsoft.news.home
 
-import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import net.zionsoft.news.home.HomeActivity
+import net.zionsoft.news.base.BaseActivity
+import net.zionsoft.news.base.MVPView
+import javax.inject.Inject
 
-class LauncherActivity : Activity() {
+interface HomeView : MVPView
+
+class HomeActivity : BaseActivity(), HomeView {
+    companion object {
+        fun newStartIntent(context: Context): Intent {
+            return Intent(context, HomeActivity::class.java)
+        }
+    }
+
+    @Inject
+    internal lateinit var presenter: HomePresenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
 
-        startActivity(HomeActivity.newStartIntent(this))
-        finish()
+    override fun onStart() {
+        super.onStart()
+        presenter.takeView(this)
+    }
+
+    override fun onStop() {
+        presenter.dropView()
+        super.onStop()
     }
 }
