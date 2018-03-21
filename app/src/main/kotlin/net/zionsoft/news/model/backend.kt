@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package net.zionsoft.news
+package net.zionsoft.news.model
 
-import android.app.Application
-import android.os.StrictMode
-import com.facebook.stetho.Stetho
-import timber.log.Timber
+import io.reactivex.Single
+import retrofit2.http.GET
+import retrofit2.http.Url
 
-abstract class BaseApp : Application() {
-    override fun onCreate() {
-        super.onCreate()
-
-        StrictMode.enableDefaults()
-        Stetho.initializeWithDefaults(this)
-        Timber.plant(Timber.DebugTree())
-    }
+interface FeedService {
+    @GET
+    fun fetchRss(@Url url: String): Single<Rss>
 }

@@ -64,5 +64,21 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.ext.daggerVersion"
 
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxAndroidVersion"
+
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.retrofitVersion"
+    implementation("com.squareup.retrofit2:converter-simplexml:$rootProject.ext.retrofitVersion") {
+        exclude group: 'xpp3', module: 'xpp3'
+        exclude group: 'stax', module: 'stax-api'
+        exclude group: 'stax', module: 'stax'
+    }
+    implementation "com.squareup.okhttp3:okhttp:$rootProject.ext.okhttpVersion"
+    implementation "com.squareup.okio:okio:$rootProject.ext.okioVersion"
+
+    implementation "com.jakewharton.timber:timber:$rootProject.ext.timberVersion"
+
     debugImplementation "com.facebook.stetho:stetho:$rootProject.ext.stethoVersion"
+    debugImplementation "com.facebook.stetho:stetho-okhttp3:$rootProject.ext.stethoVersion"
 }

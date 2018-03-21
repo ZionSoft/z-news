@@ -16,6 +16,44 @@
 
 package net.zionsoft.news.home
 
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.schedulers.Schedulers
 import net.zionsoft.news.base.MVPPresenter
+import net.zionsoft.news.model.NewsItem
+import net.zionsoft.news.model.NewsModel
+import timber.log.Timber
 
-class HomePresenter : MVPPresenter<HomeView>()
+class HomePresenter(private val newsModel: NewsModel) : MVPPresenter<HomeView>() {
+    private var loadLatestNewsDisposable: Disposable? = null
+
+    override fun onViewDropped() {
+        disposeLoadLatestNews()
+        super.onViewDropped()
+    }
+
+    private fun disposeLoadLatestNews() {
+        loadLatestNewsDisposable?.dispose()
+        loadLatestNewsDisposable = null
+    }
+
+    internal fun loadLatestNews() {
+        disposeLoadLatestNews()
+        loadLatestNewsDisposable = newsModel.loadLatestNews()
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<List<NewsItem>>() {
+                    override fun onSuccess(newsItems: List<NewsItem>) {
+                        Timber.d("Latest news loaded")
+                        loadLatestNewsDisposable = null
+                        view?.onLatestNewsLoaded(newsItems)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Timber.e(e, "Failed to load latest news")
+                        loadLatestNewsDisposable = null
+                        view?.onLatestNewsLoadFailed()
+                    }
+                })
+    }
+}

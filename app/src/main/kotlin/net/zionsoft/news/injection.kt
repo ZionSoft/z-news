@@ -28,15 +28,43 @@ import dagger.android.AndroidInjector
 import dagger.multibindings.IntoMap
 import net.zionsoft.news.home.HomeActivity
 import net.zionsoft.news.home.HomeSubcomponent
+import net.zionsoft.news.model.NewsModel
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
 open class BaseAppModule(private val app: App) {
     @Provides
     @Singleton
-    fun provideAppContext(): Context {
-        return app
-    }
+    fun provideAppContext(): Context = app
+
+    @Provides
+    @Singleton
+    fun provideOkHttpBuilder(): OkHttpClient.Builder = OkHttpClient.Builder()
+            .connectTimeout(30L, TimeUnit.SECONDS)
+            .readTimeout(30L, TimeUnit.SECONDS)
+            .writeTimeout(30L, TimeUnit.SECONDS)
+
+    @Provides
+    @Singleton
+    fun provideSimpleXml(): SimpleXmlConverterFactory = SimpleXmlConverterFactory.create()
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(xmlConverterFactory: SimpleXmlConverterFactory, okHttpClient: OkHttpClient): Retrofit =
+            Retrofit.Builder().baseUrl("http://www.zionsoft.net")
+                    .client(okHttpClient)
+                    .addConverterFactory(xmlConverterFactory)
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .build()
+
+    @Provides
+    @Singleton
+    fun provideFeedModel(retrofit: Retrofit): NewsModel = NewsModel(retrofit)
 }
 
 @Module(subcomponents = [(HomeSubcomponent::class)])

@@ -20,13 +20,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
+import net.zionsoft.news.model.NewsModel
 
 @Module
 class HomeModule {
     @Provides
-    fun provideHomePresenter(): HomePresenter {
-        return HomePresenter()
-    }
+    fun provideHomePresenter(newsModel: NewsModel): HomePresenter = HomePresenter(newsModel)
 }
 
 @Subcomponent(modules = [(HomeModule::class)])

@@ -22,9 +22,13 @@ import android.os.Bundle
 import net.zionsoft.news.R
 import net.zionsoft.news.base.BaseActivity
 import net.zionsoft.news.base.MVPView
+import net.zionsoft.news.model.NewsItem
 import javax.inject.Inject
 
-interface HomeView : MVPView
+interface HomeView : MVPView {
+    fun onLatestNewsLoaded(newsItems: List<NewsItem>)
+    fun onLatestNewsLoadFailed()
+}
 
 class HomeActivity : BaseActivity(), HomeView {
     companion object {
@@ -44,10 +48,19 @@ class HomeActivity : BaseActivity(), HomeView {
     override fun onStart() {
         super.onStart()
         presenter.takeView(this)
+        presenter.loadLatestNews()
     }
 
     override fun onStop() {
         presenter.dropView()
         super.onStop()
+    }
+
+    override fun onLatestNewsLoaded(newsItems: List<NewsItem>) {
+        // TODO
+    }
+
+    override fun onLatestNewsLoadFailed() {
+        // TODO
     }
 }
