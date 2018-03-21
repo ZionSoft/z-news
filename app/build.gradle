@@ -57,6 +57,7 @@ dependencies {
 
     implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
     implementation "com.android.support:design:$rootProject.ext.supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$rootProject.ext.supportLibraryVersion"
 
     implementation "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
     implementation "com.google.dagger:dagger-android:$rootProject.ext.daggerVersion"
@@ -78,6 +79,9 @@ dependencies {
     implementation "com.squareup.okio:okio:$rootProject.ext.okioVersion"
 
     implementation "com.jakewharton.timber:timber:$rootProject.ext.timberVersion"
+
+    implementation "com.jakewharton:butterknife:$rootProject.ext.butterKnifeVersion"
+    kapt "com.jakewharton:butterknife-compiler:$rootProject.ext.butterKnifeVersion"
 
     debugImplementation "com.facebook.stetho:stetho:$rootProject.ext.stethoVersion"
     debugImplementation "com.facebook.stetho:stetho-okhttp3:$rootProject.ext.stethoVersion"

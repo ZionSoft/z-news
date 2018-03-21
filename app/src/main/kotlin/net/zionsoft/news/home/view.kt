@@ -19,6 +19,11 @@ package net.zionsoft.news.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import android.widget.ProgressBar
+import butterknife.BindView
 import net.zionsoft.news.R
 import net.zionsoft.news.base.BaseActivity
 import net.zionsoft.news.base.MVPView
@@ -37,17 +42,34 @@ class HomeActivity : BaseActivity(), HomeView {
         }
     }
 
+    @BindView(R.id.recycler_view)
+    lateinit var recyclerView: RecyclerView
+
+    @BindView(R.id.loading_spinner)
+    lateinit var loadingSpinner: ProgressBar
+
     @Inject
     internal lateinit var presenter: HomePresenter
+
+    private lateinit var adapter: NewsListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        adapter = NewsListAdapter(this)
+        recyclerView.adapter = adapter
     }
 
     override fun onStart() {
         super.onStart()
         presenter.takeView(this)
+        loadLatestNews()
+    }
+
+    private fun loadLatestNews() {
+        loadingSpinner.visibility = View.VISIBLE
         presenter.loadLatestNews()
     }
 
@@ -57,7 +79,8 @@ class HomeActivity : BaseActivity(), HomeView {
     }
 
     override fun onLatestNewsLoaded(newsItems: List<NewsItem>) {
-        // TODO
+        loadingSpinner.visibility = View.GONE
+        adapter.setNewsItem(newsItems)
     }
 
     override fun onLatestNewsLoadFailed() {

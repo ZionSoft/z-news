@@ -19,6 +19,9 @@ package net.zionsoft.news.base
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v7.app.AppCompatActivity
+import android.view.View
+import android.view.ViewGroup
+import butterknife.ButterKnife
 import dagger.android.AndroidInjection
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -26,5 +29,23 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
+    }
+
+    @CallSuper
+    override fun setContentView(view: View) {
+        super.setContentView(view)
+        ButterKnife.bind(this)
+    }
+
+    @CallSuper
+    override fun setContentView(layoutResID: Int) {
+        super.setContentView(layoutResID)
+        ButterKnife.bind(this)
+    }
+
+    @CallSuper
+    override fun setContentView(view: View, params: ViewGroup.LayoutParams) {
+        super.setContentView(view, params)
+        ButterKnife.bind(this)
     }
 }
