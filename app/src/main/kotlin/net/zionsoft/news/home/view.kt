@@ -19,6 +19,7 @@ package net.zionsoft.news.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import net.zionsoft.news.R
 import net.zionsoft.news.base.BaseActivity
 import net.zionsoft.news.base.MVPView
 import javax.inject.Inject
@@ -37,6 +38,7 @@ class HomeActivity : BaseActivity(), HomeView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_home)
     }
 
     override fun onStart() {
