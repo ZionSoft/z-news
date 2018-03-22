@@ -26,10 +26,10 @@ import java.util.*
 
 @Root(name = "enclosure", strict = false)
 class RssEnclosure {
-    @field:Attribute(name = "url")
+    @field:Attribute(name = "url", required = false)
     var url: String? = null
 
-    @field:Attribute(name = "type")
+    @field:Attribute(name = "type", required = false)
     var mime: String? = null
 
     fun toEnclosure(): NewsItem.Enclosure? {
@@ -47,22 +47,22 @@ class RssItem {
         val dateFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH)
     }
 
-    @field:Element(name = "guid")
+    @field:Element(name = "guid", required = false)
     var guid: String? = null
 
-    @field:Element(name = "title")
+    @field:Element(name = "title", required = false)
     var title: String? = null
 
-    @field:Element(name = "description")
+    @field:Element(name = "description", required = false)
     var description: String? = null
 
-    @field:Element(name = "link")
+    @field:Element(name = "link", required = false)
     var link: String? = null
 
-    @field:Element(name = "pubDate")
+    @field:Element(name = "pubDate", required = false)
     var pubDate: String? = null
 
-    @field:Element(name = "enclosure")
+    @field:Element(name = "enclosure", required = false)
     var enclosure: RssEnclosure? = null
 
     fun toFeedItem(): NewsItem? {
