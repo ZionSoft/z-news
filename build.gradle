@@ -27,7 +27,7 @@ ext {
     compileSdkVersion = 27
     buildToolsVersion = '27.0.3'
 
-    minSdkVersion = 14
+    minSdkVersion = 19
     targetSdkVersion = 27
 
     versionCode = 100
@@ -36,6 +36,7 @@ ext {
     supportedLocales = ["en"]
 
     supportLibraryVersion = '27.1.0'
+    constraintLayoutVersion = '1.0.2'
 
     daggerVersion = '2.15'
 
@@ -49,6 +50,9 @@ ext {
     timberVersion = '4.6.1'
 
     butterKnifeVersion = '8.8.1'
+
+    glideVersion = '4.6.1'
+    threeTenAbpVersion = '1.0.5'
 
     stethoVersion = '1.5.0'
 }

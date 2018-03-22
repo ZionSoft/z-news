@@ -28,7 +28,7 @@ class NewsModel(retrofit: Retrofit) {
     private val feedService: FeedService = retrofit.create(FeedService::class.java)
 
     fun loadLatestNews(): Single<List<NewsItem>> {
-        return feedService.fetchRss("https://townhall.com/api/openaccess/news/").map { rss: Rss ->
+        return feedService.fetchRss("https://townhall.com/api/openaccess/tipsheet/").map { rss: Rss ->
             val rssItems = rss.channel?.items
             val count = rssItems?.size ?: 0
             val newsItems: ArrayList<NewsItem> = ArrayList(count)

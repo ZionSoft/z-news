@@ -79,4 +79,6 @@ abstract class ActivityModule {
 @Component(modules = [(AppModule::class), (AndroidInjectionModule::class), (ActivityModule::class)])
 interface AppComponent {
     fun inject(app: App)
+
+    fun provideOkHttpClient(): OkHttpClient
 }

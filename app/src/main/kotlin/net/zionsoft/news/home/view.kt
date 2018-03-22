@@ -70,6 +70,7 @@ class HomeActivity : BaseActivity(), HomeView {
 
     private fun loadLatestNews() {
         loadingSpinner.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
         presenter.loadLatestNews()
     }
 
@@ -80,6 +81,7 @@ class HomeActivity : BaseActivity(), HomeView {
 
     override fun onLatestNewsLoaded(newsItems: List<NewsItem>) {
         loadingSpinner.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
         adapter.setNewsItem(newsItems)
     }
 

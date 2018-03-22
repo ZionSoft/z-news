@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/title"
+        style="@style/Text.Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding"
+        android:ellipsize="end"
+        app:layout_constraintEnd_toStartOf="@id/image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Let me see what it means to have a very very very long title..."/>
+
+    <TextView
+        android:id="@+id/date"
         style="@style/Text.Subheading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="2"/>
-</LinearLayout>
+        android:layout_marginTop="@dimen/padding_small"
+        app:layout_constraintStart_toStartOf="@id/title"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        tools:text="March 21, 2018"/>
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="92dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="@dimen/padding"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/title"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/ic_launcher"/>
+
+    <View
+        style="@style/Divider.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/padding"
+        app:layout_constraintTop_toBottomOf="@id/date"/>
+</android.support.constraint.ConstraintLayout>

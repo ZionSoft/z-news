@@ -56,6 +56,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.ext.kotlinVersion"
 
     implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+    implementation "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintLayoutVersion"
     implementation "com.android.support:design:$rootProject.ext.supportLibraryVersion"
     implementation "com.android.support:recyclerview-v7:$rootProject.ext.supportLibraryVersion"
 
@@ -82,6 +83,12 @@ dependencies {
 
     implementation "com.jakewharton:butterknife:$rootProject.ext.butterKnifeVersion"
     kapt "com.jakewharton:butterknife-compiler:$rootProject.ext.butterKnifeVersion"
+
+    implementation "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
+    implementation "com.github.bumptech.glide:okhttp3-integration:$rootProject.ext.glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$rootProject.ext.glideVersion"
+
+    implementation "com.jakewharton.threetenabp:threetenabp:$rootProject.ext.threeTenAbpVersion"
 
     debugImplementation "com.facebook.stetho:stetho:$rootProject.ext.stethoVersion"
     debugImplementation "com.facebook.stetho:stetho-okhttp3:$rootProject.ext.stethoVersion"
