@@ -17,5 +17,14 @@
 package net.zionsoft.news
 
 import android.app.Activity
+import android.os.Bundle
+import net.zionsoft.news.home.HomeActivity
 
-class LauncherActivity : Activity()
+class LauncherActivity : Activity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        startActivity(HomeActivity.newStartIntent(this))
+        finish()
+    }
+}

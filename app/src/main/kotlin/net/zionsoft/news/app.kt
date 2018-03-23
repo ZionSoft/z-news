@@ -17,16 +17,18 @@
 package net.zionsoft.news
 
 import android.app.Activity
+import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import net.zionsoft.news.utils.initDateTimeUtils
+import net.zionsoft.news.utils.initTextFormatter
 import javax.inject.Inject
 
 class App : BaseApp(), HasActivityInjector {
-    private lateinit var appComponent: AppComponent
-
-    fun getAppComponent(): AppComponent {
-        return appComponent
+    companion object {
+        lateinit var appComponent: AppComponent
+            private set
     }
 
     @Inject
@@ -34,6 +36,10 @@ class App : BaseApp(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
+
+        AndroidThreeTen.init(this)
+        initDateTimeUtils(this)
+        initTextFormatter(this)
 
         appComponent = DaggerAppComponent.builder().appModule(AppModule(this)).build()
         appComponent.inject(this)

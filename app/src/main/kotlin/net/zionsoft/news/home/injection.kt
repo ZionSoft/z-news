@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package net.zionsoft.news
+package net.zionsoft.news.home
 
-import android.app.Application
-import android.os.StrictMode
-import com.facebook.stetho.Stetho
-import timber.log.Timber
+import dagger.Module
+import dagger.Provides
+import dagger.Subcomponent
+import dagger.android.AndroidInjector
+import net.zionsoft.news.model.NewsModel
 
-abstract class BaseApp : Application() {
-    override fun onCreate() {
-        super.onCreate()
+@Module
+class HomeModule {
+    @Provides
+    fun provideHomePresenter(newsModel: NewsModel): HomePresenter = HomePresenter(newsModel)
+}
 
-        StrictMode.enableDefaults()
-        Stetho.initializeWithDefaults(this)
-        Timber.plant(Timber.DebugTree())
-    }
+@Subcomponent(modules = [(HomeModule::class)])
+interface HomeSubcomponent : AndroidInjector<HomeActivity> {
+    @Subcomponent.Builder
+    abstract class Builder : AndroidInjector.Builder<HomeActivity>()
 }

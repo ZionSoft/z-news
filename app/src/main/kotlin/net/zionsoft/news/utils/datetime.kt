@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package net.zionsoft.news
+package net.zionsoft.news.utils
 
-import android.app.Application
-import android.os.StrictMode
-import com.facebook.stetho.Stetho
-import timber.log.Timber
+import android.content.Context
+import android.text.format.DateFormat
 
-abstract class BaseApp : Application() {
-    override fun onCreate() {
-        super.onCreate()
+private var is24HourFormat: Boolean = false
 
-        StrictMode.enableDefaults()
-        Stetho.initializeWithDefaults(this)
-        Timber.plant(Timber.DebugTree())
-    }
+fun initDateTimeUtils(context: Context) {
+    is24HourFormat = DateFormat.is24HourFormat(context)
 }
+
+fun is24HourFormat(): Boolean = is24HourFormat

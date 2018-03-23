@@ -30,7 +30,7 @@ open class MVPPresenter<V : MVPView> {
     }
 
     @CallSuper
-    protected fun onViewTaken() {
+    protected open fun onViewTaken() {
     }
 
     fun dropView() {
@@ -39,6 +39,6 @@ open class MVPPresenter<V : MVPView> {
     }
 
     @CallSuper
-    protected fun onViewDropped() {
+    protected open fun onViewDropped() {
     }
 }

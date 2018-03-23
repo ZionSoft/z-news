@@ -56,6 +56,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$rootProject.ext.kotlinVersion"
 
     implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+    implementation "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintLayoutVersion"
+    implementation "com.android.support:design:$rootProject.ext.supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$rootProject.ext.supportLibraryVersion"
 
     implementation "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
     implementation "com.google.dagger:dagger-android:$rootProject.ext.daggerVersion"
@@ -63,5 +66,30 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$rootProject.ext.daggerVersion"
 
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxAndroidVersion"
+
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.retrofitVersion"
+    implementation("com.squareup.retrofit2:converter-simplexml:$rootProject.ext.retrofitVersion") {
+        exclude group: 'xpp3', module: 'xpp3'
+        exclude group: 'stax', module: 'stax-api'
+        exclude group: 'stax', module: 'stax'
+    }
+    implementation "com.squareup.okhttp3:okhttp:$rootProject.ext.okhttpVersion"
+    implementation "com.squareup.okio:okio:$rootProject.ext.okioVersion"
+
+    implementation "com.jakewharton.timber:timber:$rootProject.ext.timberVersion"
+
+    implementation "com.jakewharton:butterknife:$rootProject.ext.butterKnifeVersion"
+    kapt "com.jakewharton:butterknife-compiler:$rootProject.ext.butterKnifeVersion"
+
+    implementation "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
+    implementation "com.github.bumptech.glide:okhttp3-integration:$rootProject.ext.glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$rootProject.ext.glideVersion"
+
+    implementation "com.jakewharton.threetenabp:threetenabp:$rootProject.ext.threeTenAbpVersion"
+
     debugImplementation "com.facebook.stetho:stetho:$rootProject.ext.stethoVersion"
+    debugImplementation "com.facebook.stetho:stetho-okhttp3:$rootProject.ext.stethoVersion"
 }

@@ -17,6 +17,15 @@
 package net.zionsoft.news
 
 import dagger.Module
+import dagger.Provides
+import okhttp3.OkHttpClient
+import javax.inject.Singleton
 
 @Module
-class AppModule(app: App) : BaseAppModule(app)
+class AppModule(app: App) : BaseAppModule(app) {
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(builder: OkHttpClient.Builder): OkHttpClient {
+        return builder.build()
+    }
+}
