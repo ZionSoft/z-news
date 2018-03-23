@@ -28,6 +28,7 @@ import dagger.android.AndroidInjector
 import dagger.multibindings.IntoMap
 import net.zionsoft.news.home.HomeActivity
 import net.zionsoft.news.home.HomeSubcomponent
+import net.zionsoft.news.model.DatabaseHelper
 import net.zionsoft.news.model.NewsModel
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -41,6 +42,10 @@ open class BaseAppModule(private val app: App) {
     @Provides
     @Singleton
     fun provideAppContext(): Context = app
+
+    @Provides
+    @Singleton
+    fun provideDatabaseHelper(): DatabaseHelper = DatabaseHelper(app)
 
     @Provides
     @Singleton
@@ -64,7 +69,7 @@ open class BaseAppModule(private val app: App) {
 
     @Provides
     @Singleton
-    fun provideFeedModel(retrofit: Retrofit): NewsModel = NewsModel(retrofit)
+    fun provideFeedModel(databaseHelper: DatabaseHelper, retrofit: Retrofit): NewsModel = NewsModel(databaseHelper, retrofit)
 }
 
 @Module(subcomponents = [(HomeSubcomponent::class)])
