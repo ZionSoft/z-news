@@ -17,9 +17,13 @@
 package net.zionsoft.news.model
 
 import android.content.ContentValues
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.text.TextUtils
+import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.Retrofit
+import java.util.*
 
 data class NewsItem(val uuid: String, val title: String, val description: String?, val link: String,
                     val published: Long, val enclosure: Enclosure?) {
@@ -44,7 +48,8 @@ class NewsModel(private val databaseHelper: DatabaseHelper, retrofit: Retrofit) 
             newsItems as List<NewsItem>
         }.doOnSuccess { newsItems: List<NewsItem> ->
             NewsTableHelper.save(databaseHelper.getDatabase(), newsItems)
-        }
+        }.onErrorReturn { Collections.emptyList() }.flatMapCompletable { Completable.complete() }
+                .andThen(Single.fromCallable { NewsTableHelper.loadLatest(databaseHelper.getDatabase(), 50) })
     }
 }
 
@@ -86,6 +91,31 @@ internal class NewsTableHelper {
                 }
                 contentValues.put(COLUMN_PUBLISHED, newsItem.published)
                 db.insertWithOnConflict(TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE)
+            }
+        }
+
+        fun loadLatest(db: SQLiteDatabase, limit: Int): List<NewsItem> {
+            var cursor: Cursor? = null
+            try {
+                cursor = db.query(TABLE_NAME, arrayOf(COLUMN_UUID, COLUMN_TITLE, COLUMN_DESCRIPTION, COLUMN_LINK, COLUMN_IMAGE_URL, COLUMN_PUBLISHED),
+                        null, null, null, null, "$COLUMN_PUBLISHED DESC", "$limit")
+
+                val newsItems = ArrayList<NewsItem>(cursor.count)
+                val uuidIndex = cursor.getColumnIndex(COLUMN_UUID)
+                val titleIndex = cursor.getColumnIndex(COLUMN_TITLE)
+                val descriptionIndex = cursor.getColumnIndex(COLUMN_DESCRIPTION)
+                val linkIndex = cursor.getColumnIndex(COLUMN_LINK)
+                val imageUrlIndex = cursor.getColumnIndex(COLUMN_IMAGE_URL)
+                val publishedIndex = cursor.getColumnIndex(COLUMN_PUBLISHED)
+                while (cursor.moveToNext()) {
+                    val imageUrl = cursor.getString(imageUrlIndex)
+                    val enclosure: NewsItem.Enclosure? = if (TextUtils.isEmpty(imageUrl)) null else NewsItem.Enclosure(imageUrl, "image/*")
+                    newsItems.add(NewsItem(cursor.getString(uuidIndex), cursor.getString(titleIndex), cursor.getString(descriptionIndex),
+                            cursor.getString(linkIndex), cursor.getLong(publishedIndex), enclosure))
+                }
+                return newsItems
+            } finally {
+                cursor?.close()
             }
         }
     }
