@@ -19,10 +19,10 @@ package net.zionsoft.news.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.widget.ProgressBar
 import butterknife.BindView
 import net.zionsoft.news.R
 import net.zionsoft.news.base.BaseActivity
@@ -35,18 +35,18 @@ interface HomeView : MVPView {
     fun onLatestNewsLoadFailed()
 }
 
-class HomeActivity : BaseActivity(), HomeView {
+class HomeActivity : BaseActivity(), HomeView, SwipeRefreshLayout.OnRefreshListener {
     companion object {
         fun newStartIntent(context: Context): Intent {
             return Intent(context, HomeActivity::class.java)
         }
     }
 
+    @BindView(R.id.swipe_container)
+    lateinit var swipeContainer: SwipeRefreshLayout
+
     @BindView(R.id.recycler_view)
     lateinit var recyclerView: RecyclerView
-
-    @BindView(R.id.loading_spinner)
-    lateinit var loadingSpinner: ProgressBar
 
     @Inject
     internal lateinit var presenter: HomePresenter
@@ -56,6 +56,9 @@ class HomeActivity : BaseActivity(), HomeView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        swipeContainer.setColorSchemeResources(R.color.accent)
+        swipeContainer.setOnRefreshListener(this)
 
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         adapter = NewsListAdapter(this)
@@ -69,7 +72,7 @@ class HomeActivity : BaseActivity(), HomeView {
     }
 
     private fun loadLatestNews() {
-        loadingSpinner.visibility = View.VISIBLE
+        swipeContainer.isRefreshing = true
         recyclerView.visibility = View.GONE
         presenter.loadLatestNews()
     }
@@ -80,12 +83,16 @@ class HomeActivity : BaseActivity(), HomeView {
     }
 
     override fun onLatestNewsLoaded(newsItems: List<NewsItem>) {
-        loadingSpinner.visibility = View.GONE
+        swipeContainer.isRefreshing = false
         recyclerView.visibility = View.VISIBLE
         adapter.setNewsItem(newsItems)
     }
 
     override fun onLatestNewsLoadFailed() {
         // TODO
+    }
+
+    override fun onRefresh() {
+        loadLatestNews()
     }
 }
