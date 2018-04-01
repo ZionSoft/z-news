@@ -19,6 +19,8 @@ package net.zionsoft.news.model
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.os.Parcel
+import android.os.Parcelable
 import android.text.TextUtils
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -26,8 +28,39 @@ import retrofit2.Retrofit
 import java.util.*
 
 data class NewsItem(val uuid: String, val title: String, val description: String?, val link: String,
-                    val published: Long, val enclosure: Enclosure?) {
-    data class Enclosure(val url: String, val mime: String)
+                    val published: Long, val enclosure: Enclosure?) : Parcelable {
+    override fun describeContents(): Int = 0
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(uuid)
+        dest.writeString(title)
+        dest.writeString(description)
+        dest.writeString(link)
+        dest.writeLong(published)
+        dest.writeParcelable(enclosure, flags)
+    }
+
+    companion object CREATOR : Parcelable.Creator<NewsItem> {
+        override fun createFromParcel(parcel: Parcel): NewsItem = NewsItem(parcel.readString(), parcel.readString(),
+                parcel.readString(), parcel.readString(), parcel.readLong(), parcel.readParcelable(Enclosure::class.java.classLoader))
+
+        override fun newArray(size: Int): Array<NewsItem?> = arrayOfNulls(size)
+    }
+
+    data class Enclosure(val url: String, val mime: String) : Parcelable {
+        override fun describeContents(): Int = 0
+
+        override fun writeToParcel(dest: Parcel, flags: Int) {
+            dest.writeString(url)
+            dest.writeString(mime)
+        }
+
+        companion object CREATOR : Parcelable.Creator<Enclosure> {
+            override fun createFromParcel(parcel: Parcel): Enclosure = Enclosure(parcel.readString(), parcel.readString())
+
+            override fun newArray(size: Int): Array<Enclosure?> = arrayOfNulls(size)
+        }
+    }
 }
 
 class NewsModel(private val databaseHelper: DatabaseHelper, retrofit: Retrofit) {

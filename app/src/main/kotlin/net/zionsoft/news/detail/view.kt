@@ -18,15 +18,61 @@ package net.zionsoft.news.detail
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import android.transition.Transition
+import android.widget.ImageView
+import android.widget.TextView
+import butterknife.BindView
+import net.zionsoft.news.R
 import net.zionsoft.news.base.BaseActivity
 import net.zionsoft.news.base.MVPView
+import net.zionsoft.news.misc.GlideApp
+import net.zionsoft.news.model.NewsItem
+import net.zionsoft.news.utils.fadeIn
 
 interface DetailView : MVPView
 
 class DetailActivity : BaseActivity(), DetailView {
     companion object {
-        fun newStartIntent(context: Context): Intent {
-            return Intent(context, DetailActivity::class.java)
+        private const val KEY_NEWS_ITEM = "net.zionsoft.news.KEY_NEWS_ITEM"
+
+        fun newStartIntent(context: Context, newsItem: NewsItem): Intent {
+            return Intent(context, DetailActivity::class.java).putExtra(KEY_NEWS_ITEM, newsItem)
+        }
+    }
+
+    @BindView(R.id.title)
+    internal lateinit var title: TextView
+
+    @BindView(R.id.image)
+    internal lateinit var image: ImageView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_detail)
+
+        val newsItem: NewsItem = intent.getParcelableExtra(KEY_NEWS_ITEM)
+        title.text = newsItem.title
+        if (newsItem.enclosure != null) {
+            GlideApp.with(image).load(newsItem.enclosure.url).centerCrop().into(image)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            title.alpha = 0.0F
+            window.sharedElementEnterTransition.addListener(object : Transition.TransitionListener {
+                override fun onTransitionEnd(transition: Transition) {
+                    title.fadeIn()
+                }
+
+                override fun onTransitionResume(transition: Transition) {}
+
+                override fun onTransitionPause(transition: Transition) {}
+
+                override fun onTransitionCancel(transition: Transition) {}
+
+                override fun onTransitionStart(transition: Transition) {}
+            })
         }
     }
 }
