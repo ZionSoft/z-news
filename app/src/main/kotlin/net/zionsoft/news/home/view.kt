@@ -19,10 +19,11 @@ package net.zionsoft.news.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.SystemClock
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.View
+import android.text.format.DateUtils
 import butterknife.BindView
 import net.zionsoft.news.R
 import net.zionsoft.news.base.BaseActivity
@@ -53,6 +54,8 @@ class HomeActivity : BaseActivity(), HomeView, SwipeRefreshLayout.OnRefreshListe
 
     private lateinit var adapter: NewsListAdapter
 
+    private var lastRefreshedTime = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -68,12 +71,17 @@ class HomeActivity : BaseActivity(), HomeView, SwipeRefreshLayout.OnRefreshListe
     override fun onStart() {
         super.onStart()
         presenter.takeView(this)
-        loadLatestNews()
+        loadLatestNews(false)
     }
 
-    private fun loadLatestNews() {
+    private fun loadLatestNews(forceRefresh: Boolean) {
+        if (!forceRefresh
+                && adapter.itemCount > 0
+                && SystemClock.elapsedRealtime() - lastRefreshedTime <= 5L * DateUtils.MINUTE_IN_MILLIS) {
+            return
+        }
+
         swipeContainer.isRefreshing = true
-        recyclerView.visibility = View.GONE
         presenter.loadLatestNews()
     }
 
@@ -84,8 +92,8 @@ class HomeActivity : BaseActivity(), HomeView, SwipeRefreshLayout.OnRefreshListe
 
     override fun onLatestNewsLoaded(newsItems: List<NewsItem>) {
         swipeContainer.isRefreshing = false
-        recyclerView.visibility = View.VISIBLE
         adapter.setNewsItem(newsItems)
+        lastRefreshedTime = SystemClock.elapsedRealtime()
     }
 
     override fun onLatestNewsLoadFailed() {
@@ -93,6 +101,6 @@ class HomeActivity : BaseActivity(), HomeView, SwipeRefreshLayout.OnRefreshListe
     }
 
     override fun onRefresh() {
-        loadLatestNews()
+        loadLatestNews(true)
     }
 }
