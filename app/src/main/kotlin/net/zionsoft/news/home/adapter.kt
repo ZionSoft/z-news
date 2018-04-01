@@ -19,18 +19,20 @@ package net.zionsoft.news.home
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import net.zionsoft.news.R
+import net.zionsoft.news.detail.DetailActivity
 import net.zionsoft.news.misc.GlideApp
 import net.zionsoft.news.model.NewsItem
 import net.zionsoft.news.utils.toLocalDateTime
 
 internal class NewsItemViewHolder(inflater: LayoutInflater, container: ViewGroup)
-    : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_news, container, false)) {
+    : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_news, container, false)), View.OnClickListener {
     @BindView(R.id.title)
     internal lateinit var title: TextView
 
@@ -42,6 +44,7 @@ internal class NewsItemViewHolder(inflater: LayoutInflater, container: ViewGroup
 
     init {
         ButterKnife.bind(this, itemView)
+        itemView.setOnClickListener(this)
     }
 
     fun bind(newsItem: NewsItem) {
@@ -51,6 +54,11 @@ internal class NewsItemViewHolder(inflater: LayoutInflater, container: ViewGroup
         if (newsItem.enclosure != null) {
             GlideApp.with(image).load(newsItem.enclosure.url).centerCrop().into(image)
         }
+    }
+
+    override fun onClick(v: View) {
+        val context = v.context
+        context.startActivity(DetailActivity.newStartIntent(context))
     }
 }
 

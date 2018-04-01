@@ -26,6 +26,8 @@ import dagger.android.ActivityKey
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dagger.multibindings.IntoMap
+import net.zionsoft.news.detail.DetailActivity
+import net.zionsoft.news.detail.DetailSubcomponent
 import net.zionsoft.news.home.HomeActivity
 import net.zionsoft.news.home.HomeSubcomponent
 import net.zionsoft.news.model.DatabaseHelper
@@ -72,12 +74,17 @@ open class BaseAppModule(private val app: App) {
     fun provideFeedModel(databaseHelper: DatabaseHelper, retrofit: Retrofit): NewsModel = NewsModel(databaseHelper, retrofit)
 }
 
-@Module(subcomponents = [(HomeSubcomponent::class)])
+@Module(subcomponents = [(HomeSubcomponent::class), (DetailSubcomponent::class)])
 abstract class ActivityModule {
     @Binds
     @IntoMap
     @ActivityKey(HomeActivity::class)
     internal abstract fun bindHomeActivityInjectorFactory(builder: HomeSubcomponent.Builder): AndroidInjector.Factory<out Activity>
+
+    @Binds
+    @IntoMap
+    @ActivityKey(DetailActivity::class)
+    internal abstract fun bindDetailActivityInjectorFactory(builder: DetailSubcomponent.Builder): AndroidInjector.Factory<out Activity>
 }
 
 @Singleton
