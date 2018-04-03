@@ -16,6 +16,8 @@
 
 package net.zionsoft.news.detail
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -48,21 +50,32 @@ class DetailActivity : BaseActivity(), DetailView {
     @BindView(R.id.image)
     internal lateinit var image: ImageView
 
+    @BindView(R.id.content)
+    internal lateinit var content: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
         val newsItem: NewsItem = intent.getParcelableExtra(KEY_NEWS_ITEM)
         title.text = newsItem.title
+        content.text = newsItem.description
         if (newsItem.enclosure != null) {
             GlideApp.with(image).load(newsItem.enclosure.url).centerCrop().into(image)
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             title.alpha = 0.0F
+            content.alpha = 0.0F
             window.sharedElementEnterTransition.addListener(object : Transition.TransitionListener {
                 override fun onTransitionEnd(transition: Transition) {
                     title.fadeIn()
+                    title.animate().setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            super.onAnimationEnd(animation)
+                            content.fadeIn()
+                        }
+                    })
                 }
 
                 override fun onTransitionResume(transition: Transition) {}

@@ -25,5 +25,13 @@
             android:padding="@dimen/padding"
             app:layout_constraintBottom_toBottomOf="@id/image"
             tools:text="Let me see what it means to have a very very very long title..."/>
+
+        <TextView
+            android:id="@+id/content"
+            style="@style/Text.Subheading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding"
+            app:layout_constraintTop_toBottomOf="@id/image"/>
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
