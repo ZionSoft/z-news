@@ -5,6 +5,8 @@
 
     <string name="title_home">Z News</string>
 
+    <string name="btn_view_on_web">View on Web</string>
+
     <!--
    %1$s: month, %2$d: date, %3$d: year
     -->

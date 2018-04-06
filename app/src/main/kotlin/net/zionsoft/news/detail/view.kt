@@ -20,9 +20,12 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.transition.Transition
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import butterknife.BindView
@@ -35,7 +38,7 @@ import net.zionsoft.news.utils.fadeIn
 
 interface DetailView : MVPView
 
-class DetailActivity : BaseActivity(), DetailView {
+class DetailActivity : BaseActivity(), DetailView, View.OnClickListener {
     companion object {
         private const val KEY_NEWS_ITEM = "net.zionsoft.news.KEY_NEWS_ITEM"
 
@@ -53,9 +56,14 @@ class DetailActivity : BaseActivity(), DetailView {
     @BindView(R.id.content)
     internal lateinit var content: TextView
 
+    @BindView(R.id.view_on_web)
+    internal lateinit var viewOnWeb: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_detail)
+        viewOnWeb.setOnClickListener(this)
 
         val newsItem: NewsItem = intent.getParcelableExtra(KEY_NEWS_ITEM)
         title.text = newsItem.title
@@ -67,6 +75,7 @@ class DetailActivity : BaseActivity(), DetailView {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             title.alpha = 0.0F
             content.alpha = 0.0F
+            viewOnWeb.alpha = 0.0F
             window.sharedElementEnterTransition.addListener(object : Transition.TransitionListener {
                 override fun onTransitionEnd(transition: Transition) {
                     title.fadeIn()
@@ -74,6 +83,7 @@ class DetailActivity : BaseActivity(), DetailView {
                         override fun onAnimationEnd(animation: Animator) {
                             super.onAnimationEnd(animation)
                             content.fadeIn()
+                            viewOnWeb.fadeIn()
                         }
                     })
                 }
@@ -86,6 +96,13 @@ class DetailActivity : BaseActivity(), DetailView {
 
                 override fun onTransitionStart(transition: Transition) {}
             })
+        }
+    }
+
+    override fun onClick(v: View) {
+        if (v == viewOnWeb) {
+            val newsItem: NewsItem = intent.getParcelableExtra(KEY_NEWS_ITEM)
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(newsItem.link)))
         }
     }
 }
