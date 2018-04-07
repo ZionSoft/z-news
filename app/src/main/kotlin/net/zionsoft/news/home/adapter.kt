@@ -16,21 +16,25 @@
 
 package net.zionsoft.news.home
 
+import android.app.Activity
 import android.content.Context
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import net.zionsoft.news.R
+import net.zionsoft.news.detail.DetailActivity
 import net.zionsoft.news.misc.GlideApp
 import net.zionsoft.news.model.NewsItem
 import net.zionsoft.news.utils.toLocalDateTime
 
 internal class NewsItemViewHolder(inflater: LayoutInflater, container: ViewGroup)
-    : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_news, container, false)) {
+    : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_news, container, false)), View.OnClickListener {
     @BindView(R.id.title)
     internal lateinit var title: TextView
 
@@ -40,16 +44,30 @@ internal class NewsItemViewHolder(inflater: LayoutInflater, container: ViewGroup
     @BindView(R.id.image)
     internal lateinit var image: ImageView
 
+    private var newsItem: NewsItem? = null
+
     init {
         ButterKnife.bind(this, itemView)
+        itemView.setOnClickListener(this)
     }
 
     fun bind(newsItem: NewsItem) {
+        this.newsItem = newsItem
+
         title.text = newsItem.title
         date.text = newsItem.published.toLocalDateTime()
-
         if (newsItem.enclosure != null) {
             GlideApp.with(image).load(newsItem.enclosure.url).centerCrop().into(image)
+        } else {
+            GlideApp.with(image).clear(image)
+        }
+    }
+
+    override fun onClick(v: View) {
+        if (newsItem != null) {
+            val activity = v.context as Activity
+            activity.startActivity(DetailActivity.newStartIntent(activity, newsItem!!),
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(activity, image, "image").toBundle())
         }
     }
 }
