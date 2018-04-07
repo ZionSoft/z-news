@@ -16,8 +16,10 @@
 
 package net.zionsoft.news.model
 
+import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import io.reactivex.Completable
 import io.reactivex.Single
 import java.util.*
 import kotlin.collections.HashMap
@@ -25,6 +27,22 @@ import kotlin.collections.HashMap
 class ReadHistoryModel(private val databaseHelper: DatabaseHelper) {
     fun loadReadCounts(uuids: List<String>): Single<Map<String, Int>> =
             Single.fromCallable { ReadHistoryTableHelper.loadReadCounts(databaseHelper.getDatabase(), uuids) }
+
+    fun increaseReadCount(uuid: String): Completable =
+            Completable.fromCallable {
+                val db = databaseHelper.getDatabase()
+                db.beginTransaction()
+                try {
+                    val currentReadCount = ReadHistoryTableHelper.loadReadCount(db, uuid)
+                    ReadHistoryTableHelper.save(db, uuid, currentReadCount + 1)
+
+                    db.setTransactionSuccessful()
+                } finally {
+                    db.endTransaction()
+                }
+
+                null
+            }
 }
 
 internal class ReadHistoryTableHelper {
@@ -38,6 +56,28 @@ internal class ReadHistoryTableHelper {
                     "$COLUMN_UUID TEXT PRIMARY KEY," +
                     "$COLUMN_READ_COUNT INTEGER NOT NULL" +
                     ");")
+        }
+
+        fun save(db: SQLiteDatabase, uuid: String, readCount: Int) {
+            val contentValues = ContentValues(2)
+            contentValues.put(COLUMN_UUID, uuid)
+            contentValues.put(COLUMN_READ_COUNT, readCount)
+            db.insertWithOnConflict(TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE)
+        }
+
+        fun loadReadCount(db: SQLiteDatabase, uuid: String): Int {
+            var cursor: Cursor? = null
+            try {
+                cursor = db.query(TABLE_NAME, arrayOf(COLUMN_READ_COUNT),
+                        "$COLUMN_UUID = ?", arrayOf(uuid), null, null, null, null)
+                return if (cursor.moveToFirst()) {
+                    cursor.getInt(0)
+                } else {
+                    0
+                }
+            } finally {
+                cursor?.close()
+            }
         }
 
         fun loadReadCounts(db: SQLiteDatabase, uuids: List<String>): Map<String, Int> {
