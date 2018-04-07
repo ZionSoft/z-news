@@ -19,6 +19,7 @@ package net.zionsoft.news.home
 import android.app.Activity
 import android.content.Context
 import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -51,10 +52,12 @@ internal class NewsItemViewHolder(inflater: LayoutInflater, container: ViewGroup
         itemView.setOnClickListener(this)
     }
 
-    fun bind(newsItem: NewsItem) {
+    fun bind(newsItem: NewsItem, readCount: Int) {
         this.newsItem = newsItem
 
         title.text = newsItem.title
+        title.setTextColor(ContextCompat.getColor(title.context,
+                if (readCount == 0) R.color.text_dark_primary else R.color.text_dark_secondary))
         date.text = newsItem.published.toLocalDateTime()
         if (newsItem.enclosure != null) {
             GlideApp.with(image).load(newsItem.enclosure.url).centerCrop().into(image)
@@ -74,21 +77,22 @@ internal class NewsItemViewHolder(inflater: LayoutInflater, container: ViewGroup
 
 internal class NewsListAdapter(context: Context) : RecyclerView.Adapter<NewsItemViewHolder>() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var newsItems: List<NewsItem>? = null
+    private var newsItems: List<Pair<NewsItem, Int>>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsItemViewHolder {
         return NewsItemViewHolder(inflater, parent)
     }
 
     override fun onBindViewHolder(holder: NewsItemViewHolder, position: Int) {
-        holder.bind(newsItems!![position])
+        val item = newsItems!![position]
+        holder.bind(item.first, item.second)
     }
 
     override fun getItemCount(): Int {
         return newsItems?.size ?: 0
     }
 
-    fun setNewsItem(newsItems: List<NewsItem>) {
+    fun setNewsItem(newsItems: List<Pair<NewsItem, Int>>) {
         this.newsItems = newsItems
         notifyDataSetChanged()
     }

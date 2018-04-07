@@ -32,7 +32,7 @@ import net.zionsoft.news.model.NewsItem
 import javax.inject.Inject
 
 interface HomeView : MVPView {
-    fun onLatestNewsLoaded(newsItems: List<NewsItem>)
+    fun onLatestNewsLoaded(newsItems: List<Pair<NewsItem, Int>>)
     fun onLatestNewsLoadFailed()
 }
 
@@ -90,7 +90,7 @@ class HomeActivity : BaseActivity(), HomeView, SwipeRefreshLayout.OnRefreshListe
         super.onStop()
     }
 
-    override fun onLatestNewsLoaded(newsItems: List<NewsItem>) {
+    override fun onLatestNewsLoaded(newsItems: List<Pair<NewsItem, Int>>) {
         swipeContainer.isRefreshing = false
         adapter.setNewsItem(newsItems)
         lastRefreshedTime = SystemClock.elapsedRealtime()
