@@ -32,6 +32,7 @@ import net.zionsoft.news.home.HomeActivity
 import net.zionsoft.news.home.HomeSubcomponent
 import net.zionsoft.news.model.DatabaseHelper
 import net.zionsoft.news.model.NewsModel
+import net.zionsoft.news.model.ReadHistoryModel
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -71,7 +72,11 @@ open class BaseAppModule(private val app: App) {
 
     @Provides
     @Singleton
-    fun provideFeedModel(databaseHelper: DatabaseHelper, retrofit: Retrofit): NewsModel = NewsModel(databaseHelper, retrofit)
+    fun provideNewsModel(databaseHelper: DatabaseHelper, retrofit: Retrofit): NewsModel = NewsModel(databaseHelper, retrofit)
+
+    @Provides
+    @Singleton
+    fun provideReadHistoryModel(databaseHelper: DatabaseHelper): ReadHistoryModel = ReadHistoryModel(databaseHelper)
 }
 
 @Module(subcomponents = [(HomeSubcomponent::class), (DetailSubcomponent::class)])

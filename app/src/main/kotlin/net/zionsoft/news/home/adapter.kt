@@ -19,6 +19,7 @@ package net.zionsoft.news.home
 import android.app.Activity
 import android.content.Context
 import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -33,8 +34,12 @@ import net.zionsoft.news.misc.GlideApp
 import net.zionsoft.news.model.NewsItem
 import net.zionsoft.news.utils.toLocalDateTime
 
-internal class NewsItemViewHolder(inflater: LayoutInflater, container: ViewGroup)
+internal class NewsItemViewHolder(inflater: LayoutInflater, container: ViewGroup, private val listener: Listener)
     : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_news, container, false)), View.OnClickListener {
+    interface Listener {
+        fun onNewsItemOpened(newsItem: NewsItem)
+    }
+
     @BindView(R.id.title)
     internal lateinit var title: TextView
 
@@ -51,10 +56,12 @@ internal class NewsItemViewHolder(inflater: LayoutInflater, container: ViewGroup
         itemView.setOnClickListener(this)
     }
 
-    fun bind(newsItem: NewsItem) {
+    fun bind(newsItem: NewsItem, readCount: Int) {
         this.newsItem = newsItem
 
         title.text = newsItem.title
+        title.setTextColor(ContextCompat.getColor(title.context,
+                if (readCount == 0) R.color.text_dark_primary else R.color.text_dark_secondary))
         date.text = newsItem.published.toLocalDateTime()
         if (newsItem.enclosure != null) {
             GlideApp.with(image).load(newsItem.enclosure.url).centerCrop().into(image)
@@ -68,28 +75,41 @@ internal class NewsItemViewHolder(inflater: LayoutInflater, container: ViewGroup
             val activity = v.context as Activity
             activity.startActivity(DetailActivity.newStartIntent(activity, newsItem!!),
                     ActivityOptionsCompat.makeSceneTransitionAnimation(activity, image, "image").toBundle())
+
+            title.setTextColor(ContextCompat.getColor(title.context, R.color.text_dark_secondary))
+            listener.onNewsItemOpened(newsItem!!)
         }
     }
 }
 
-internal class NewsListAdapter(context: Context) : RecyclerView.Adapter<NewsItemViewHolder>() {
+internal class NewsListAdapter(context: Context) : RecyclerView.Adapter<NewsItemViewHolder>(), NewsItemViewHolder.Listener {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var newsItems: List<NewsItem>? = null
+    private val newsItems: ArrayList<Pair<NewsItem, Int>> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsItemViewHolder {
-        return NewsItemViewHolder(inflater, parent)
+        return NewsItemViewHolder(inflater, parent, this)
     }
 
     override fun onBindViewHolder(holder: NewsItemViewHolder, position: Int) {
-        holder.bind(newsItems!![position])
+        val item = newsItems[position]
+        holder.bind(item.first, item.second)
     }
 
-    override fun getItemCount(): Int {
-        return newsItems?.size ?: 0
-    }
+    override fun getItemCount(): Int = newsItems.size
 
-    fun setNewsItem(newsItems: List<NewsItem>) {
-        this.newsItems = newsItems
+    fun setNewsItem(newsItems: List<Pair<NewsItem, Int>>) {
+        this.newsItems.clear()
+        this.newsItems.addAll(newsItems)
         notifyDataSetChanged()
+    }
+
+    override fun onNewsItemOpened(newsItem: NewsItem) {
+        for (i in 0 until newsItems.size) {
+            val item = newsItems[i]
+            if (item.first.uuid == newsItem.uuid) {
+                newsItems[i] = Pair(item.first, item.second + 1)
+                break
+            }
+        }
     }
 }

@@ -23,9 +23,10 @@ import io.reactivex.schedulers.Schedulers
 import net.zionsoft.news.base.MVPPresenter
 import net.zionsoft.news.model.NewsItem
 import net.zionsoft.news.model.NewsModel
+import net.zionsoft.news.model.ReadHistoryModel
 import timber.log.Timber
 
-class HomePresenter(private val newsModel: NewsModel) : MVPPresenter<HomeView>() {
+class HomePresenter(private val newsModel: NewsModel, private val readHistoryModel: ReadHistoryModel) : MVPPresenter<HomeView>() {
     private var loadLatestNewsDisposable: Disposable? = null
 
     override fun onViewDropped() {
@@ -41,9 +42,21 @@ class HomePresenter(private val newsModel: NewsModel) : MVPPresenter<HomeView>()
     internal fun loadLatestNews() {
         disposeLoadLatestNews()
         loadLatestNewsDisposable = newsModel.loadLatestNews()
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<List<NewsItem>>() {
-                    override fun onSuccess(newsItems: List<NewsItem>) {
+                .map { newsItems ->
+                    val uuids = ArrayList<String>(newsItems.size)
+                    for (newsItem in newsItems) {
+                        uuids.add(newsItem.uuid)
+                    }
+                    val readCounts = readHistoryModel.loadReadCounts(uuids).blockingGet()
+                    val newsItemWithReadCount = ArrayList<Pair<NewsItem, Int>>(newsItems.size)
+                    for (newsItem in newsItems) {
+                        val readCount = readCounts[newsItem.uuid]
+                        newsItemWithReadCount.add(Pair(newsItem, readCount ?: 0))
+                    }
+                    newsItemWithReadCount
+                }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<List<Pair<NewsItem, Int>>>() {
+                    override fun onSuccess(newsItems: List<Pair<NewsItem, Int>>) {
                         Timber.d("Latest news loaded")
                         loadLatestNewsDisposable = null
                         view?.onLatestNewsLoaded(newsItems)

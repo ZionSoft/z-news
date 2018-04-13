@@ -16,6 +16,24 @@
 
 package net.zionsoft.news.detail
 
+import io.reactivex.observers.DisposableCompletableObserver
+import io.reactivex.schedulers.Schedulers
 import net.zionsoft.news.base.MVPPresenter
+import net.zionsoft.news.model.ReadHistoryModel
+import timber.log.Timber
 
-class DetailPresenter : MVPPresenter<DetailView>()
+class DetailPresenter(private val readHistoryModel: ReadHistoryModel) : MVPPresenter<DetailView>() {
+    fun increaseReadCount(uuid: String) {
+        readHistoryModel.increaseReadCount(uuid)
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(object : DisposableCompletableObserver() {
+                    override fun onComplete() {
+                        Timber.d("Read count increased")
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Timber.e(e, "Failed to increase read count")
+                    }
+                })
+    }
+}

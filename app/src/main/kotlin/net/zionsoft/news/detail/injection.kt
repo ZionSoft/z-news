@@ -20,11 +20,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
+import net.zionsoft.news.model.ReadHistoryModel
 
 @Module
 class DetailModule {
     @Provides
-    fun provideDetailPresenter(): DetailPresenter = DetailPresenter()
+    fun provideDetailPresenter(readHistoryModel: ReadHistoryModel): DetailPresenter = DetailPresenter(readHistoryModel)
 }
 
 @Subcomponent(modules = [(DetailModule::class)])

@@ -35,6 +35,7 @@ import net.zionsoft.news.base.MVPView
 import net.zionsoft.news.misc.GlideApp
 import net.zionsoft.news.model.NewsItem
 import net.zionsoft.news.utils.fadeIn
+import javax.inject.Inject
 
 interface DetailView : MVPView
 
@@ -58,6 +59,9 @@ class DetailActivity : BaseActivity(), DetailView, View.OnClickListener {
 
     @BindView(R.id.view_on_web)
     internal lateinit var viewOnWeb: Button
+
+    @Inject
+    internal lateinit var presenter: DetailPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,6 +101,17 @@ class DetailActivity : BaseActivity(), DetailView, View.OnClickListener {
                 override fun onTransitionStart(transition: Transition) {}
             })
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.takeView(this)
+        presenter.increaseReadCount((intent.getParcelableExtra(KEY_NEWS_ITEM) as NewsItem).uuid)
+    }
+
+    override fun onStop() {
+        presenter.dropView()
+        super.onStop()
     }
 
     override fun onClick(v: View) {

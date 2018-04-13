@@ -30,6 +30,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         db.beginTransaction()
         try {
             NewsTableHelper.createTable(db)
+            ReadHistoryTableHelper.createTable(db)
             db.setTransactionSuccessful()
         } finally {
             db.endTransaction()
